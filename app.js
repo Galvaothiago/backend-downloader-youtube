@@ -18,12 +18,13 @@ app.post('/youtube', async (request, response) => {
 
     try {
         const isValidUrl = ytdl.validateURL(url)
+        
         if(!isValidUrl) {
-            throw new Error('Url invalid')
+            response.status(400).send({ message: "Url is invalid, please try again!" })
+            return
         }
 
         const info = await ytdl.getBasicInfo(url)
-        
         const { title, viewCount, thumbnails, lengthSeconds } = info.videoDetails
     
         response.send({ url, title, viewCount, lengthSeconds, thumbnail: thumbnails[thumbnails.length - 1].url })
